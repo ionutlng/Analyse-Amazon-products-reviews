@@ -1,7 +1,7 @@
+import os
 import re
 from bs4 import BeautifulSoup
 import requests
-
 
 URL = "https://www.amazon.com"
 HEADERS = ({'User-Agent':
@@ -12,6 +12,7 @@ out_file = "amazom.txt"
 # list with links for all categories
 links_categories = list()
 links_products = list()
+set_all_products = set()
 
 
 # returneaza codul HTML al unei pagini web
@@ -44,7 +45,7 @@ def getProductsLink(link):
 
     print(link, "- page 1 - parsed")
     page = 1
-    #daca butonul de Next e vizibil, mergem pe link&page=...
+    # daca butonul de Next e vizibil, mergem pe link&page=...
     while soup.find('li', {"class": "a-last"}) or soup.find('a', {"id": "pagnNextLink"}):
         page = page + 1
         new_link = link + "&page=" + str(page)
@@ -75,8 +76,10 @@ amazon_html = getHTML(URL, HEADERS)
 # 2. parsam link-urile pentru fiecare categorie, de pe pagina principala
 links_categories = getCategoriesLink(amazon_html)
 
+
 # 3. mergem pe fiecare categorie, extragem link-urile cu produsele, si salvam in fisiere.
-for link_cat in links_categories:
+def extractAllProducts():
+    for link_cat in links_categories:
         links_products = getProductsLink(link_cat)
 
         filename = link_cat.replace("https://www.amazon.com/", "")
@@ -88,15 +91,25 @@ for link_cat in links_categories:
         filename = filename.replace("\"", "")
 
         save_list_to_file(str(filename) + ".txt", links_products)
-        print(link_cat, len(links_products), links_products)
-
-# 4. citim toate link-urile din fisiere, si le punem intr-o lista/intr-un dictionar/dataframe
 
 
+## decomenteaza, daca vrei sa rulezi parserul:
+# extractAllProducts()
 
-# 5. scoatem duplicatele
+
+# 4. eliminare duplicate
+def readAllLinks_removeDuplicates():
+    path = os.getcwd()
+    for file in os.listdir(path):
+        if file.endswith(".txt"):
+            with open(file, 'r') as content:
+                link = content.read()
+                set_all_products.add(link)
+
+
+readAllLinks_removeDuplicates
 
 
 
-# 6. accesam link-urile produselor, citim comentariile, si le punem intr-un dataframe
 
+# 5. accesam link-urile produselor(set_all_products), citim comentariile, si le punem intr-un dataframe
