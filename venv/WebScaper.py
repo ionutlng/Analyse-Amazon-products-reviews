@@ -2,6 +2,8 @@ import os
 import re
 from bs4 import BeautifulSoup
 import requests
+import csv
+import pandas as pd
 
 URL = "https://www.amazon.com"
 HEADERS = ({'User-Agent':
@@ -20,9 +22,9 @@ def getHTML(my_url, my_header):
     webpage = requests.get(my_url, headers=my_header)
     soup = BeautifulSoup(webpage.content, "lxml")
     return soup
-
-
-# returneaza o lista cu LINK-urile pentru fiecare categorie de pe pagina amazon.com
+#
+#
+# # returneaza o lista cu LINK-urile pentru fiecare categorie de pe pagina amazon.com
 def getCategoriesLink(soup):
     links = list()
     regex = re.compile('.*a-link-normal see-more.*')
@@ -31,7 +33,7 @@ def getCategoriesLink(soup):
     return links
 
 
-# returneaza o lista cu LINK-urile PRODUSELOD
+# returneaza o lista cu LINK-urile PRODUSELOR
 def getProductsLink(link):
     soup = getHTML(link, HEADERS)
     links = list()
@@ -68,6 +70,20 @@ def save_list_to_file(my_file, my_list):
         file.write(line_to_write)
 
     file.close()
+
+#salveaza continutul unui dictionar intr-un fisier
+def save_dict_to_file(my_file, my_dict):
+    w = csv.writer(open(my_file, "w+"))
+    for key, val in my_dict.items():
+        w.writerow([key, val])
+
+#salveaza toate review-urile dintr-un produs (doar prima pagina)
+def getReviewsFromURL(soup):
+    review_list = list()
+    regex = re.compile('.*reviewText review-text-content.*')
+    for div in soup.find_all('div', {"class": regex}):
+       review_list.append(div.text)
+    return review_list
 
 
 # 1. citim continutul paginii https://www.amazon.com
@@ -109,7 +125,18 @@ def readAllLinks_removeDuplicates():
 
 readAllLinks_removeDuplicates
 
+# 5. accesam link-urile produselor, citim comentariile, si le punem intr-un dataframe
+def setCommentsToDataFrame(file_path):
+    link_review = dict()
+    with open(file_path) as links:
+        for link in links.readlines():
+            link_review[link] = getReviewsFromURL(getHTML(link,HEADERS))
 
+    data_frame = pd.Series(link_review)
+    data_frame.to_csv("Output/output.csv")
 
+setCommentsToDataFrame('Output/fortest.txt')
 
-# 5. accesam link-urile produselor(set_all_products), citim comentariile, si le punem intr-un dataframe
+#6. Curatam data-frameul de NA
+def cleanDataFrameComments():
+    print("to do")
