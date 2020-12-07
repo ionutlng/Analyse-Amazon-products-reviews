@@ -1,0 +1,30 @@
+html,
+body {
+    height: 100%;
+}
+
+body{
+    background-color: var(--light-black);
+}
+
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.content-box{
+    overflow-y: auto;
+    color: var(--light-grey-1);
+    background-color: var(--light-grey-2);
+    border-radius: 20px;
+}
+
+.container-fluid{
+    margin-top: 9vh;
+}
+
+.form-control:focus,
+.btn:focus{
+    box-shadow: none!important;
+    border-color: #ced4da!important;
+}

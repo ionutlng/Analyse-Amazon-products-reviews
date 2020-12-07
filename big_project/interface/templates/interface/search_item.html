@@ -1,0 +1,24 @@
+{% extends 'big_project/base_template.html' %}
+{% load static %}
+
+{% block title %} Search Item {% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'interface/css/search_item.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-12">
+            <h1 class="text-center">Search an item</h1>
+        </div>
+        <div class="col-8 mt-5">
+            <div class="input-group">
+                <input type="text" class="form-control no-border" placeholder="Write the item name you want to search here" aria-describedby="basic-addon2" id="item_search">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-dark-turquoise" type="button">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
