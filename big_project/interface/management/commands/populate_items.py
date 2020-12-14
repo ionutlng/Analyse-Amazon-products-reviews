@@ -17,17 +17,17 @@ fake = Faker()
 class Command(BaseCommand):
     def _populate_items(self, number_of_items):
         for _ in range(0, number_of_items):
-            Item.objects.create(name=fake.text(max_nb_chars=15))
+            Item.objects.create(name=fake.text(max_nb_chars=15)[:-1])
 
     def _populate_reviews(self, number_of_reviews):
         for _ in range(0, number_of_reviews):
-            Review.objects.create(description=fake.text(max_nb_chars=30))
+            Review.objects.create(description=fake.text(max_nb_chars=30)[:-1])
 
     def _add_reviews_to_items(self):
         items = Item.objects.all()
         reviews = Review.objects.all()
         for item in items:
-            for _ in range(0,random.randrange(2,10)):
+            for _ in range(0, random.randrange(2, 10)):
                 item.reviews.add(random.choice(reviews))
 
     def add_arguments(self, parser):

@@ -1,4 +1,4 @@
-import {debounce} from './utils.js';
+import {debounce, split_from_to_end} from './utils.js';
 
 function autocomplete(inp, arr) {
     function addActive(autocomplete_list) {
@@ -24,8 +24,8 @@ function autocomplete(inp, arr) {
         }
     };
 
-    var currentFocus;
-    var suggestion_div, element_div, i, val = inp.value;
+    let currentFocus;
+    let suggestion_div, element_div, i, val = inp.value;
 
     closeAllLists();
     if (!val) { return false; }
@@ -39,11 +39,14 @@ function autocomplete(inp, arr) {
 
     for (i = 0; i < arr.length; i++) {
         element_div = document.createElement("DIV");
-        element_div.innerHTML = arr[i];
+        element_div.innerHTML = split_from_to_end(arr[i], ',');
         element_div.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
         element_div.addEventListener("click", function (e) {
-            inp.value = this.getElementsByTagName("input")[0].value;
+            const elem = this.getElementsByTagName("input");
+            inp.value = split_from_to_end(elem[0].value,',');
+            inp.setAttribute("custom_tag", elem[0].value.split(',',1));
             closeAllLists();
+            document.getElementById('search_btn').click();
         });
         suggestion_div.appendChild(element_div);
     }
@@ -58,9 +61,11 @@ function autocomplete(inp, arr) {
             currentFocus--;
             addActive(autocomplete_list);
         } else if (event.keyCode == 13) {
-            event.preventDefault();
             if (currentFocus > -1) {
-                if (autocomplete_list) autocomplete_list[currentFocus].click();
+                if (autocomplete_list) {
+                    autocomplete_list[currentFocus].click();
+                    document.getElementById('search_btn').click();
+                }
             }
         }
     });
@@ -71,7 +76,7 @@ function autocomplete(inp, arr) {
 };
 
 function autocomplete_listener(event){
-    const target_element = event.target;
+    let target_element = event.target;
     let input = target_element.value;
     if (input.trim() != '') {
         input = input.replace(/ /gi, "_");

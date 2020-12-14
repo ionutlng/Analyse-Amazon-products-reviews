@@ -1,0 +1,10 @@
+.review-col{
+    border-top: 1px solid var(--cyan);
+    border-bottom: 1px solid var(--cyan);
+    border-radius: 20px;
+}
+
+#item_name{
+    background-color: var(--light-black);
+    border-radius: 5px;
+}

@@ -29,7 +29,7 @@
 }
 
 .autocomplete-active {
-    background-color: var(--light-grey-1) !important;
+    background-color: var(--dark-turquoise) !important;
     color: var(--cyan);
 }
 

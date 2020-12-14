@@ -9,21 +9,27 @@
 {% endblock %}
 
 {% block body %}
-    <div class="row justify-content-center mt-5">
+    <div class="row justify-content-center mt-3">
         <div class="col-12">
             <h1 class="text-center">Search an item</h1>
         </div>
-        <div class="col-8 mt-5">
+        <div class="col-8 mt-3">
             <div class="input-group">
                 <input type="text" class="form-control no-border" placeholder="Write the item name you want to search here" aria-describedby="basic-addon2" id="item_search">
                 <div class="input-group-append">
-                    <button class="btn btn-outline-dark-turquoise" type="button">Search</button>
+                    <button class="btn btn-outline-dark-turquoise" type="button" onclick="get_item()" id="search_btn">Search</button>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row mt-5 justify-content-center">
+        <div class="col-12">
+            <div id="item_details"></div>
         </div>
     </div>
 {% endblock %}
 
 {% block script %}
     <script type="module" src="{% static 'interface/js/autocomplete.js' %}"></script>
+    <script src="{% static 'interface/js/item_detail_table.js' %}"></script>
 {% endblock %}

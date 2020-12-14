@@ -1,0 +1,16 @@
+<div class="row justify-content-center align-items-center">
+    <div class="col-12">
+        <div class="row justify-content-center">
+            <div class="col-12" id="item_name">
+                <b><h1 class="text-center text-dark-turquoise">{{item.name}}</h1></b>
+            </div>
+        </div>
+        <div class="row mt-2 justify-content-around">
+            {% for review in item.reviews.all %}
+                <div class="col-4 mt-2">
+                    <h5 class="text-center review-col p-3">{{review.description}}</h5>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

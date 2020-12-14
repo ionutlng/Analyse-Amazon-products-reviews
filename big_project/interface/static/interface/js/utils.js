@@ -13,4 +13,8 @@ function debounce(func, wait = 150, early = false) {
     };
 }
 
-export {debounce};
+function split_from_to_end(str, delim) {
+    return str.slice(str.indexOf(delim) + delim.length);
+}
+
+export {debounce, split_from_to_end};
