@@ -1,17 +1,17 @@
 # ECHIPA G
-###(Saptamana a 3-a) Alegerea proiectului
+### (Saptamana a 3-a) Alegerea proiectului
 **Tema**: Analyse Amazon products reviews  
 **Scop**:  
 - A ajuta producatorii sa-si dea seama rapid si usor care sunt problemele produsului lor.
 - A ajuta clientii in a decide daca merita sau nu sa cumpere un anumit produs
 Culegerea datelor: web scraping/ crawler pe Amazon
-####Stabilire input/ output pentru parserul de date
+#### Stabilire input/ output pentru parserul de date
 **Input**: toate review-urile produsului  
 **Output**:   
 dictionar cu:  
 - key: review-uri pro/ contra
 - value: cuvinte semnificative pentru keys
-###(Saptamana a 4-a) Stabilirea arhitecturii proiectului. Cine si ce face pana cand?
+### (Saptamana a 4-a) Stabilirea arhitecturii proiectului. Cine si ce face pana cand?
 - Crawler/ web scraping (python, beautiful soup, requests, poate si selenium): **Lungeanu Ionut**
   - saptamana a 5-a: prima versiune
   - saptamana a 6-a: imbunatatiri
