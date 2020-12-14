@@ -1,4 +1,4 @@
-"""big_project URL Configuration
+"""scraper_interface URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
-app_name = 'big_project'
+app_name = 'scraper_interface'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
