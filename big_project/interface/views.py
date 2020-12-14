@@ -14,7 +14,7 @@ def get_items(request, search_input):
         items_filter = []
 
         for string in inputs:
-            items_filter.append(Q(name=string))
+            items_filter.append(Q(name__icontains=string))
 
         items_query = items_filter.pop()
 
@@ -25,9 +25,9 @@ def get_items(request, search_input):
 
         qs = (Item.objects
                   .filter(filters)
-                  .annotate(name=Count('id', filter=items_query))
-                  .annotate(total_filter_cnt=F('name'))
-                  .order_by('-total_filter_cnt')[:10])
+                  .annotate(name_filter_cnt=Count('id', filter=items_query))
+                  .annotate(total_filter_cnt=F('name_filter_cnt'))
+                  .order_by('-total_filter_cnt')[:6])
 
         response = JsonResponse([f'{item.name}' for item in qs], safe=False)
         return response

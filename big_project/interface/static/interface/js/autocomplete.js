@@ -1,4 +1,4 @@
-import {debounce} from './util.js';
+import {debounce} from './utils.js';
 
 function autocomplete(inp, arr) {
     function addActive(autocomplete_list) {
