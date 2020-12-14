@@ -47,3 +47,31 @@
     border-color: var(--dark-turquoise);
     color: var(--cyan);
 }
+
+.bg-black {
+    background-color: var(--black) !important;
+}
+
+.bg-light-black {
+    background-color: var(--light-black) !important;
+}
+
+.bg-dark-grey {
+    background-color: var(--dark-grey) !important;
+}
+
+.bg-light-grey-1 {
+    background-color: var(--light-grey-1) !important;
+}
+
+.bg-light-grey-2 {
+    background-color: var(--light-grey-2) !important;
+}
+
+.bg-cyan {
+    background-color: var(--cyan) !important;
+}
+
+.bg-dark-turquoise {
+    background-color: var(--dark-turquoise) !important;
+}
