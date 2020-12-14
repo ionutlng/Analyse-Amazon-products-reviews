@@ -10,7 +10,7 @@ class Review(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=300)
-    reviews = models.ManyToManyField(Reviews)
+    reviews = models.ManyToManyField(Review)
 
     def __str__(self):
         return f'{self.name}'
