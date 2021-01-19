@@ -70,10 +70,12 @@ def generateXML(myDict, writeIn):
         name = et.SubElement(item, "link")
         name.text = key
 
+        trans = Translator()
+
         for value in myDict[key]:
             review = et.SubElement(item, "review")
             try:
-                review.text = value
+                review.text = trans.translate(value, dest='ro').text
             except:
                 pass
 
@@ -82,8 +84,7 @@ def generateXML(myDict, writeIn):
     tree = et.ElementTree(root)
 
     with open(writeIn, "wb") as files:
-        tree.write(files)
-
+        tree.write(files, encoding='utf-8', xml_declaration=True)
 
 dictionaryData = readData("Output\\all\\all_comments.txt")
 generateXML(dictionaryData, "Output\\all\\all_comments.xml")
