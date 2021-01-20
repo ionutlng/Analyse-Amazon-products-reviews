@@ -12,6 +12,8 @@ from googletrans import Translator
 from joblib import Parallel, delayed
 from selenium import webdriver
 
+from scraper.textProcessing import AnalizaText
+
 os.environ['MOZ_HEADLESS'] = '1'
 
 URL = "https://www.amazon.com"
@@ -24,6 +26,8 @@ out_file = "amazom.txt"
 FILE_PATH = "output"
 FILE_ALL_PRODUCTS = "all_products.txt"
 FILE_ALL_COMMENTS = "\\Output\\all\\all_comments.txt"
+FILE_ALL_COMMENTS_XML = 'Output\\all\\all_comments.xml'
+FILE_ALL_REVIEWS_XML = 'Output\\all\\final_reviews.xml'
 
 # list with links for all categories
 links_categories = list()
@@ -330,5 +334,16 @@ if __name__ == "__main__" :
     getProductsComments(FILE_ALL_PRODUCTS, FILE_ALL_COMMENTS)
     print('DONE - 100% #\t', datetime.now())
 
-    print("END:", datetime.now())
+    # 7. Mutam informatiile obtinute in Output/all/all_comments.txt intr-un fisier .xml
+    print('\n\n...\n* Mutam informatiile din .txt in format .xml')
+    # dictionaryData = readData("Output\\all\\all_comments.txt")
+    # generateXML(dictionaryData, "Output\\all\\all_comments.xml")
+    # parseXML("Output\\all\\all_comments.xml")
+    print('DONE - 100% #\t', datetime.now())
+
+    # 8. Incepem analiza pe text
+    print('\n\n...\n* Incepem analiza textului pe produsul dat...')
+    nume_produs = "tbd"
+    AnalizaText(FILE_ALL_COMMENTS_XML, nume_produs)
+    print('DONE - 100% #\t', datetime.now())
 
