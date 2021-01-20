@@ -33,7 +33,7 @@ def getLemmaFromAdj(xml_file):
 
 # calculeaza scorul pentru un review. Daca e Positiv/Negativ.
 def calculateScore(asd):
-    return "TDB"
+    return ["TBD_POS", "TBD_NEG"]
 
 
 # cauta un produs in XML, face POS pe toate comentariile, si creaza un XML final, ce va fi folosit in UI
@@ -81,11 +81,12 @@ def AnalizaText(file, produs_cautat):
                     list_of_adjectives = getLemmaFromAdj("outputuri\\review.xml")
 
                     # calculeaza scorul pentru lista de adjective
-                    review_score = calculateScore(list_of_adjectives)
+                    positive_negative = calculateScore(list_of_adjectives)
+                    positive = positive_negative[0]
+                    negative = positive_negative[1]
 
                     # adauga review-ul + scorul in XML
-                    review_xml = ET.SubElement(root_newXML, "review", attrib={"id": str(total_reviews), "score": review_score})
-                    review_xml.text = listToString(list_of_adjectives)
+                    review_xml = ET.SubElement(root_newXML, "review", attrib={"id": str(total_reviews), "positive": listToString(positive), "negative": listToString(negative)})
 
                     os.chdir("..")
             break
