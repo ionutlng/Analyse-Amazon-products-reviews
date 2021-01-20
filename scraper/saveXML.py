@@ -127,6 +127,6 @@ def parseXML(file):
 
 #dictionaryData = readData("Output\\all\\all_comments.txt")
 #generateXML(dictionaryData, "Output\\all\\all_comments.xml")
-parseXML("Output\\all\\all_comments.xml")
+#parseXML("Output\\all\\all_comments.xml")
 
 
