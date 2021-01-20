@@ -32,9 +32,35 @@ def getLemmaFromAdj(xml_file):
 
 
 # calculeaza scorul pentru un review. Daca e Positiv/Negativ.
-def calculateScore(asd):
-    return ["TBD_POS", "TBD_NEG"]
+def valueOfSentence(list_to_be_processed):
+    most_freq_adj = {"diferit": 1, "folosit": -1, "important":1, "mare":1, "disponibil":1, "popular":1,
+    "in stare":1, "cunoscut":1, "variat":1, "dificil":-1, "vechi":-1, "similar":-1,"tradiţional":-1, "real":1,
+    "de succes":1, "scump": -1, "inteligent":1, "interesant":1, "sărac":-1, "drăguţ":1, "util":1,
+    "Recent":1, "Grozav":1, "minunat":1, "imposibil": -1, "serios":1, "imens":1,
+    "rar":1, "exact":1, "capabil":1, "periculos": -1, "eficient":1, "puternic":1, "practic":1,
+    "potrivit":1, "suficient":1, "neobișnuit":1, "nefericit":-1, "acceptabil":-1, "plictisitor":-1,
+    "distinct":1, "logic":1, "rezonabil":-1, "strict":-1, "automat":1, "masiv":1, "impresionant":1,
+    "placut":1,"incapabil":-1,"slab":-1,"decent":1,"remarcabil":1,"înalt":1,"minuscul":-1,"nou":1,
+    "bun":1,"Cel mai bun":1,"mai bine":1,"simplu":1,"actual":1,"ultimul":1,
+    "principal":1,"profesional":1,"internaţional":1,"inferior":-1,"in conformitate":1,"special":1,
+    "întreg":1,"clar":1,"uşor":1,"pozitiv":1,"corect":1,"complex":1,"independent":1,"original":1,
+    "frumos":1,"complet":1,"negativ":-1,"gresit":-1,"în urmă":-1,"rapid":1,"excelent":1,
+    "unic":1,"clasic":1,"occidental":1,"familiar":1,"oficial":1,"perfect":1,"luminos":1,"confortabil":1,
+    "bogat":1,"robust":1,"valoros":1,"încet":-1,"curat":1,"proaspăt":1,"normal":1,"ieftin":-1,"obiectiv":1,
+    "sigur":1,"misto":1,"uimitor":1,"stare brută":-1,"ciudat":-1,"ilegal":-1,"comun":-1,"super":1,
+    "superior":1,"murdar":-1,"Sclipitor":1,"dragă":1,"îngrijit":1,"ok":1,"prostesc":-1,"prost":-1}
 
+    list_of_relevant_adj = []
+    positive_adj_list = []
+    negative_adj_list = []
+    for adj in list_to_be_processed:
+        if (adj in most_freq_adj) and (most_freq_adj[adj] == 1):
+            positive_adj_list.append(adj)
+        elif(adj in most_freq_adj) and (most_freq_adj[adj] == -1):
+            negative_adj_list.append(adj)
+    list_of_relevant_adj.append(positive_adj_list)
+    list_of_relevant_adj.append(negative_adj_list)
+    return list_of_relevant_adj
 
 # cauta un produs in XML, face POS pe toate comentariile, si creaza un XML final, ce va fi folosit in UI
 def AnalizaText(file, produs_cautat):
@@ -81,7 +107,7 @@ def AnalizaText(file, produs_cautat):
                     list_of_adjectives = getLemmaFromAdj("outputuri\\review.xml")
 
                     # calculeaza scorul pentru lista de adjective
-                    positive_negative = calculateScore(list_of_adjectives)
+                    positive_negative = valueOfSentence(list_of_adjectives)
                     positive = positive_negative[0]
                     negative = positive_negative[1]
 
