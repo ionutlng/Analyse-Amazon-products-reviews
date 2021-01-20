@@ -9,11 +9,4 @@ staticfiles/
 *.sln
 *.pyproj
 *.pyproj.*
-scraper/WebScaper.py
-*.txt
-*.xml
 scraper/geckodriver.log
-scraper/Output/all/all_comments.xml
-scraper/Output/all/all_comments.txt
-scraper/WebScaper.py
-scraper/saveXML.py
