@@ -5,6 +5,7 @@ import multiprocessing
 import os
 import re
 from datetime import datetime
+from time import sleep
 
 from bs4 import BeautifulSoup
 from googletrans import Translator
@@ -21,8 +22,8 @@ out_file = "amazom.txt"
 
 # fisiere
 FILE_PATH = "output"
-FILE_ALL_PRODUCTS = "\\all_products.txt"
-FILE_ALL_COMMENTS = "\\all_comments.txt"
+FILE_ALL_PRODUCTS = "all_products.txt"
+FILE_ALL_COMMENTS = "\\Output\\all\\all_comments.txt"
 
 # list with links for all categories
 links_categories = list()
@@ -39,13 +40,19 @@ def translateSequence(input):
 
 # returneaza codul HTML al unei pagini web
 def getHTML(my_url):
-    browser = webdriver.Firefox()
+    browser = webdriver.Chrome()
+    browser.implicitly_wait(1)
     browser.get(my_url)
     html = browser.page_source
     soup = BeautifulSoup(html, 'lxml')
     browser.quit()
     return soup
 
+def getDriver(link):
+    driver = webdriver.Chrome()
+    driver.get(link)
+    driver.implicitly_wait(10)
+    return driver
 
 # # returneaza o lista cu LINK-urile pentru fiecare categorie de pe pagina amazon.com
 def getCategoriesLink(soup):
@@ -85,11 +92,40 @@ def getProductsLink(link):
 
 # salveaza toate review-urile dintr-un produs (doar prima pagina)
 def getReviewsFromURL(link):
-    soup = getHTML(link)
-    review_list = list()
-    regex = re.compile('.*reviewText review-text-content.*')
+    if not link.endswith('#customerReviews'):
+        link = link + '#customerReviews'
 
-    for div in soup.find_all('div', {"class": regex}):
+    review_list = list()
+    newDriver = getDriver(link)
+
+    productName = newDriver.find_element_by_id('productTitle').text
+    productName = productName.strip()
+    productName = productName.replace("\n", '')
+    review_list.append(productName)
+    print(productName)
+
+    try_step = 0
+    max_try = 10
+
+    sleep(10)
+    element = newDriver.find_element_by_class_name('a-size-base review-text')
+    print(element.text)
+    while try_step < max_try:
+        print(try_step)
+        element = newDriver.find_element_by_class_name('a-size-base review-text')
+        if element.text != "":
+            try_step = 10
+            print('founded')
+        try_step = try_step + 1
+        print(try_step)
+
+    elements = newDriver.find_elements_by_class_name('a-size-base review-text')
+    for i in elements:
+        print(i.text)
+
+
+
+    '''for div in soup.find_all('div', {"class": regex}):
         try:
             comment = div.text.strip()
             comment = comment.replace("\n", "")
@@ -98,14 +134,15 @@ def getReviewsFromURL(link):
         except:
             pass
 
-    if len(review_list) == 0:
+    print(review_list)
+    if len(review_list) == 1:
         review_list = getReviewsFromURL2(getCustomerRatingsLink)
 
     try:
         save_dict_to_file(FILE_ALL_COMMENTS, link, review_list)
 
     except:
-        pass
+        pass'''
     return True
 
 
@@ -117,6 +154,12 @@ def getReviewsFromURL2(link):
     soup = getHTML(link)
     review_list = list()
     regex = re.compile('.*review-text review-text-content.*')
+
+    productName = soup.find('span', {'id': 'productTitle'}).text
+    productName = productName.strip()
+    productName = productName.replace("\n", '')
+    review_list.append(productName)
+
     for div in soup.find_all('div', {"class": regex}):
         try:
             comment = div.text.strip()
@@ -134,7 +177,7 @@ def getReviewsFromURL2(link):
 
 # salveaza continutul unui dictionar intr-un fisier
 def save_dict_to_file(my_file, link, comments):
-    path = os.getcwd() + "\\Output\\all" + my_file
+    path = os.getcwd() + my_file
     with codecs.open(path, "a+", "utf-8") as file:
         x = f'{str(link)} \\ {str(comments)}\n'
         file.write(x)
@@ -205,7 +248,12 @@ def getProductsComments(file_products, file_comments):
     path = os.getcwd() + "\\Output\\all\\" + file_products
     with open(path, "r") as links:
         for link in links.readlines():
-            list_of_products.append(link)
+            fixed_link = link.replace("\n", "")
+            list_of_products.append(fixed_link)
+
+
+    # for link in list_of_products:
+    #     getReviewsFromURL(link)
 
     num_cores = multiprocessing.cpu_count()
     pool = multiprocessing.Pool(processes=num_cores-1, maxtasksperchild=2)

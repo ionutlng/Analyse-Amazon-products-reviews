@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 import codecs
+import os
+import subprocess
 import xml.etree.ElementTree as et
 
 from googletrans import Translator
@@ -37,8 +39,11 @@ def readData(filename):
             else:
                 #i = i + 1
                 #line = lines[i]
+                if line.startswith('\\'):
+                    line = line[1:]
                 line = line.replace('\n', '')
                 line = line.replace('\r', '')
+                line = line.replace('\b', '')
                 line = line.replace('[', '')
                 line = line.replace(']', '')
 
@@ -86,7 +91,42 @@ def generateXML(myDict, writeIn):
     with open(writeIn, "wb") as files:
         tree.write(files, encoding='utf-8', xml_declaration=True)
 
-dictionaryData = readData("Output\\all\\all_comments.txt")
-generateXML(dictionaryData, "Output\\all\\all_comments.xml")
+def parseXML(file):
+    tree = et.parse(file)
+    root = tree.getroot()
+
+    # for each item
+    for item in root.findall('item'):
+        #name = item.name('name')
+        #if name == 'xyz':
+        link = item.find('link')
+        reviews = item.findall('review')
+        for review in reviews:
+            #print(link.text, review.text)
+            review_text = review.text
+            if isinstance(review_text, str):
+                if review_text.startswith('\\'):
+                    review_text = review_text[1:]
+                review_text = review_text.replace('\n', '')
+                review_text = review_text.replace('\b', '')
+                review_text = review_text.replace('\r', '')
+
+                path = os.getcwd() + '\\bin_posro'
+                os.chdir(path)
+
+                # move review into a separate txt file
+                f = codecs.open("inputuri\\review.txt", 'w+', encoding='utf-8')
+                f.write(review_text)
+                f.close()
+
+                # run the tool to get POS
+                path = os.getcwd() + '\\posRO.bat'
+                subprocess.call([path])
+                break
+
+
+#dictionaryData = readData("Output\\all\\all_comments.txt")
+#generateXML(dictionaryData, "Output\\all\\all_comments.xml")
+parseXML("Output\\all\\all_comments.xml")
 
 
