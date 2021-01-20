@@ -203,7 +203,6 @@ def save_all_productsLink(filename):
 def getProductsComments(file_products, file_comments):
     list_of_products = list()
     path = os.getcwd() + "\\Output\\all\\" + file_products
-    print(path)
     with open(path, "r") as links:
         for link in links.readlines():
             list_of_products.append(link)
