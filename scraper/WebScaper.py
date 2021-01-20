@@ -203,6 +203,7 @@ def save_all_productsLink(filename):
 def getProductsComments(file_products, file_comments):
     list_of_products = list()
     path = os.getcwd() + "\\Output\\all\\" + file_products
+    print(path)
     with open(path, "r") as links:
         for link in links.readlines():
             list_of_products.append(link)
@@ -211,7 +212,7 @@ def getProductsComments(file_products, file_comments):
     pool = multiprocessing.Pool(processes=num_cores-1, maxtasksperchild=2)
     try:
         result_map = pool.map(getReviewsFromURL, [link for link in list_of_products], chunksize=1)
-        '''for link, comments in (r for r in result_map):
+        ''' for link, comments in (r for r in result_map):
             my_dict = dict()
             my_dict[link] = comments
             save_dict_to_file(file_comments, my_dict)'''
