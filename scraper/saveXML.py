@@ -18,6 +18,7 @@ def readData(filename):
     with codecs.open(filename, encoding='utf-8') as f:
         lines = f.readlines()
 
+
     for i in range(0, len(lines)):
         line = lines[i]
         if new_review == False:
@@ -38,8 +39,8 @@ def readData(filename):
             else:
                 #i = i + 1
                 #line = lines[i]
-                if line.startswith('\\'):
-                    line = line[1:]
+                if line.startswith(' \\'):
+                    line = line[2:]
                 line = line.replace('\n', '')
                 line = line.replace('\r', '')
                 line = line.replace('\b', '')
@@ -68,6 +69,7 @@ def generateXML(myDict, writeIn):
     root = et.Element("amazon_items")
 
     for key in myDict.keys():
+        print(key)
         item = et.Element("item")
         root.append(item)
 
@@ -81,14 +83,16 @@ def generateXML(myDict, writeIn):
         name.text = productName
 
 
-        trans = Translator()
 
         for value in myDict[key]:
+            print(value)
             review = et.SubElement(item, "review")
             try:
-                review.text = trans.translate(value, dest='ro').text
+                trans = Translator()
+                review_translated = trans.translate(value, dest='ro').text
+                review.text = review_translated
             except:
-                pass
+                continue
 
     tree = et.ElementTree(root)
 

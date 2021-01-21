@@ -8,11 +8,11 @@ FILE_ALL_REVIEWS_XML = 'Output\\all\\final_reviews.xml'
 
 
 def listToString(s):
-    str1 = s[0]
-    for ele in s[1:]:
+    str1 = ""
+    for ele in s:
         str1 = str1 + ", " + ele
 
-    return str1
+    return str1[2:]
 
 
 # Adjective_XML = os.getcwd() + "\\Output\\all\\translated_comments.xml"
@@ -123,4 +123,4 @@ def AnalizaText(file, produs_cautat):
 
 
 
-AnalizaText(FILE_ALL_COMMENTS_XML, 'iPhone 15 PRO smecher 12GB de inch')
+#AnalizaText(FILE_ALL_COMMENTS_XML, 'Ultimate Bundle Lightning Cable White')
