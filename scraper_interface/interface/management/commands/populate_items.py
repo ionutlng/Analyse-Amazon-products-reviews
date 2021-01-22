@@ -31,10 +31,10 @@ class Command(BaseCommand):
                 item.reviews.add(random.choice(reviews))
 
     def add_arguments(self, parser):
-        parser.add_argument('--items_number', type=int, default=10, help='later')
-        parser.add_argument('--reviews_number', type=int, default=50, help='later')
+        parser.add_argument('--generate_items', type=int, default=10, help='Number of dummy items generated')
+        parser.add_argument('--generate_reviews', type=int, default=50, help='Number of dummy reviews generated')
 
     def handle(self, *args, **options):
-        self._populate_items(options['items_number'])
-        self._populate_reviews(options['reviews_number'])
+        self._populate_items(options['generate_items'])
+        self._populate_reviews(options['generate_reviews'])
         self._add_reviews_to_items()

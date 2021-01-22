@@ -1,16 +1,45 @@
-<div class="row justify-content-center align-items-center">
+<div class="row justify-content-center align-items-center mt-2">
     <div class="col-12">
         <div class="row justify-content-center">
             <div class="col-12" id="item_name">
                 <b><h1 class="text-center text-dark-turquoise">{{item.name}}</h1></b>
             </div>
         </div>
-        <div class="row mt-2 justify-content-around">
-            {% for review in item.reviews.all %}
-                <div class="col-4 mt-2">
-                    <h5 class="text-center review-col p-3">{{review.description}}</h5>
+        <div class="row mt-5 justify-content-center">
+            <div class="col-6">
+                <h3 class="text-center positive-review-header">Positive Reviews</h3>
+                <div class="row justify-content-center mt-3">
+                    {% for review in positive_reviews %}
+                        <div class="col-4 mt-2">
+                            <h5 class="text-center positive-review p-3">
+                                {% if review.occurrences > 1 %}
+                                    <div class="text-dark-turquoise d-inline-block">{{review.occurrences}}x</div>
+                                {% endif %}
+                                {{review.description}}
+                            </h5>
+                        </div>
+                    {% empty %}
+                        <h2 class="text-center text-dark-turquoise p-3">- No good reviews! -</h2>
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            </div>
+            <div class="col-6">
+                <h3 class="text-center negative-review-header">Negative Reviews</h3>
+                <div class="row justify-content-center">
+                    {% for review in negative_reviews %}
+                        <div class="col-4 mt-2">
+                            <h5 class="text-center negative-review p-3">
+                                {% if review.occurrences > 1 %}
+                                    <div class="text-dark-turquoise d-inline-block">{{review.occurrences}}x</div>
+                                {% endif %}
+                                {{review.description}}
+                            </h5>
+                        </div>
+                    {% empty %}
+                        <h2 class="text-center text-dark-turquoise p-3">- No bad reviews! -</h2>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 </div>

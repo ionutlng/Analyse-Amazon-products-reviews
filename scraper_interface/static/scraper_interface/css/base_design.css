@@ -8,8 +8,8 @@ body{
 }
 
 .row {
-    margin-left: 0px;
-    margin-right: 0px;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .content-box{
@@ -25,6 +25,6 @@ body{
 
 .form-control:focus,
 .btn:focus{
-    box-shadow: none!important;
-    border-color: #ced4da!important;
+    box-shadow: none !important;
+    border-color: #ced4da !important;
 }

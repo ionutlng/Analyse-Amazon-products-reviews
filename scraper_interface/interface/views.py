@@ -15,6 +15,12 @@ class ItemDV(DetailView):
     template_name = 'interface/snippets/item_details.html'
     http_method_names = ['get']
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['positive_reviews'] = context['item'].reviews.filter(is_positive=True).order_by('-occurrences')
+        context['negative_reviews'] = context['item'].reviews.filter(is_positive=False).order_by('-occurrences')
+        return context
+
 
 def get_items(request, search_input):
     if request.method == "GET":
