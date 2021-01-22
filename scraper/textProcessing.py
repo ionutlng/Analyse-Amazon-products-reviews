@@ -6,6 +6,7 @@ import subprocess
 FILE_ALL_COMMENTS_XML = 'Output\\all\\all_comments.xml'
 FILE_ALL_REVIEWS_XML = 'Output\\all\\final_reviews.xml'
 
+listOfProducts = list()
 
 def listToString(s):
     str1 = ""
@@ -13,6 +14,19 @@ def listToString(s):
         str1 = str1 + ", " + ele
 
     return str1[2:]
+
+# populeaza lista cu numele produselor (numele se ia din link)
+def readListOfProducts():
+    with codecs.open('Output\\all\\all_products.txt', encoding='utf-8') as f:
+        lines = f.readlines()
+
+    for line in lines:
+        productName = line
+        productName = productName.split("amazon.com/")[1]
+        productName = productName.split("/")[0]
+        productName = productName.replace("-", " ")
+        if len(productName) >= 5:
+            listOfProducts.append(productName)
 
 
 # Adjective_XML = os.getcwd() + "\\Output\\all\\translated_comments.xml"
@@ -63,64 +77,74 @@ def valueOfSentence(list_to_be_processed):
     return list_of_relevant_adj
 
 # cauta un produs in XML, face POS pe toate comentariile, si creaza un XML final, ce va fi folosit in UI
-def AnalizaText(file, produs_cautat):
+def AnalizaText(file):
     tree = ET.parse(file)
     root = tree.getroot()
-    root_newXML = ET.Element("amazon_item")
-    total_reviews = 0
+    root_newXML = ET.Element("amazon_items")
 
-    # for each item
-    for item in root.findall('item'):
-        name_of_product = item.find('name')
-        if name_of_product.text == produs_cautat:
-            # adauga numele in XML
-            name = ET.SubElement(root_newXML, "name")
-            name.text = produs_cautat
+    item_founded = False
+    for product in listOfProducts: # pentru fiecare produs din lista
+        item_founded = False
+        for item in root.findall('item'): # pentru fiecare NOD din xml
+            try:
+                name_of_product = item.find('name')
+                if name_of_product.text == product:
+                    item_founded = True
+                    total_reviews = 0
+                    # daca produsul a fost gasit in XML, atunci creez un nou NOD in NOUL xml:
+                    product_newXML = ET.SubElement(root_newXML, 'item')
+                    name = ET.SubElement(product_newXML, "name") # adauga numele in XML
+                    name.text = product
 
-            link = item.find('link')
-            reviews = item.findall('review')
+                    link = item.find('link')
+                    reviews = item.findall('review')
 
-            for review in reviews:
-                review_text = review.text
-                if isinstance(review_text, str):
-                    total_reviews = total_reviews + 1
-                    if review_text.startswith('\\'):
-                        review_text = review_text[1:]
-                    review_text = review_text.replace('\n', '')
-                    review_text = review_text.replace('\b', '')
-                    review_text = review_text.replace('\r', '')
+                    for review in reviews:
+                        review_text = review.text
+                        if isinstance(review_text, str):
+                            total_reviews = total_reviews + 1
+                            if review_text.startswith('\\'):
+                                review_text = review_text[1:]
+                            review_text = review_text.replace('\n', '')
+                            review_text = review_text.replace('\b', '')
+                            review_text = review_text.replace('\r', '')
 
-                    path = os.getcwd() + '\\bin_posro'
-                    os.chdir(path)
+                            path = os.getcwd() + '\\bin_posro'
+                            os.chdir(path)
 
-                    # move review into a separate txt file
-                    f = codecs.open("inputuri\\review.txt", 'w+', encoding='utf-8')
-                    f.write(review_text)
-                    f.close()
+                            # move review into a separate txt file
+                            f = codecs.open("inputuri\\review.txt", 'w+', encoding='utf-8')
+                            f.write(review_text)
+                            f.close()
 
-                    # run the tool to get POS
-                    path = os.getcwd() + '\\posRO.bat'
-                    subprocess.call([path])
+                            # run the tool to get POS
+                            path = os.getcwd() + '\\posRO.bat'
+                            subprocess.call([path])
 
 
-                    # genereaza lista de adjective
-                    list_of_adjectives = getLemmaFromAdj("outputuri\\review.xml")
+                            # genereaza lista de adjective
+                            list_of_adjectives = getLemmaFromAdj("outputuri\\review.xml")
 
-                    # calculeaza scorul pentru lista de adjective
-                    positive_negative = valueOfSentence(list_of_adjectives)
-                    positive = positive_negative[0]
-                    negative = positive_negative[1]
+                            # calculeaza scorul pentru lista de adjective
+                            positive_negative = valueOfSentence(list_of_adjectives)
+                            positive = positive_negative[0]
+                            negative = positive_negative[1]
 
-                    # adauga review-ul + scorul in XML
-                    review_xml = ET.SubElement(root_newXML, "review", attrib={"id": str(total_reviews), "positive": listToString(positive), "negative": listToString(negative)})
+                            # adauga review-ul + scorul in XML
+                            review_xml = ET.SubElement(product_newXML, "review", attrib={"id": str(total_reviews), "positive": listToString(positive), "negative": listToString(negative)})
 
-                    os.chdir("..")
-            break
+                            os.chdir("..")
+                    continue
+                if item_founded == True:
+                    continue
+            except:
+                continue
+
 
     newTree = ET.ElementTree(root_newXML)
     with open(FILE_ALL_REVIEWS_XML, "wb") as files:
         newTree.write(files, encoding='utf-8', xml_declaration=True)
 
-
-
-#AnalizaText(FILE_ALL_COMMENTS_XML, 'Ultimate Bundle Lightning Cable White')
+readListOfProducts()
+#print(listOfProducts)
+AnalizaText(FILE_ALL_COMMENTS_XML)
